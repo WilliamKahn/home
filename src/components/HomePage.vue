@@ -73,6 +73,7 @@ html, body {
 }
 h1 {
   background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   font-size: 3em; /* Increased font size */
