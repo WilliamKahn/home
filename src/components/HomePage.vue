@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       name: "William Kahn",
-      description: "A brief introduction about yourself.",
+      description: "测试网站",
       buttons: [
         { text: "Button 1", action: this.button1Action },
         { text: "Button 2", action: this.button2Action },
