@@ -18,7 +18,7 @@ export default {
   name: 'HomePage',
   data() {
     return {
-      name: "William Kahn",
+      name: "name",
       description: "测试网站4",
       buttons: [
         { text: "Button 1", action: this.button1Action },
@@ -46,9 +46,19 @@ export default {
       const randomColor2 = colors[Math.floor(Math.random() * colors.length)];
       document.body.style.background = `linear-gradient(to right, ${randomColor1}, ${randomColor2})`;
     },
+    async fetchName() {
+      try {
+        const response = await fetch('http://116.62.197.158/api/get/name');
+        const data = await response.json();
+        this.name = data.message;
+      } catch (error) {
+        console.error('Error fetching name:', error);
+      }
+    }
   },
-  mounted() {
+  async mounted() {
     this.setRandomBackground();
+    await this.fetchName();
   },
 };
 </script>
