@@ -1,6 +1,6 @@
 /* eslint-disable vue/multi-word-component-names */
 <template>
-  <div class="container">
+  <div class="container full-height">
     <div class="content">
       <h1>{{ name }}</h1>
       <p>{{ description }}</p>
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       name: "William Kahn",
-      description: "测试网站4",
+      description: "AI生成网站",
       buttons: [
         { text: "Button 1", action: this.button1Action },
         { text: "Button 2", action: this.button2Action },
@@ -57,22 +57,21 @@ export default {
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden; /* Disable scrolling */
+  overflow: auto; /* Enable scrolling */
 }
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Match parent height */
+  min-height: 100vh; /* Minimum height to viewport height */
   text-align: center;
 }
 .content {
-  /* Removed the white background */
   padding: 20px;
   border-radius: 10px;
 }
 h1 {
-  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+  background: linear-gradient(to right, #000000, #ffffff); /* Changed gradient to black and white */
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -87,5 +86,8 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+.full-height {
+  min-height: 100vh; /* Ensure minimum viewport height */
 }
 </style>
