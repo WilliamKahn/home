@@ -48,7 +48,7 @@ export default {
     },
     async fetchName() {
       try {
-        const response = await fetch('http://williamkahn.cn/api/get/name');
+        const response = await fetch('https://api.williamkahn.cn/get/name');
         const data = await response.json();
         this.name = data.message;
       } catch (error) {
