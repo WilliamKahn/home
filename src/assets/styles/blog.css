@@ -3,6 +3,7 @@
   display: flex;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
 }
 
 /* 侧边栏样式 */
@@ -15,6 +16,45 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+/* 移动端侧边栏 */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    width: 100%;
+    max-width: 320px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    transform: translateX(0);
+  }
+  
+  .sidebar.active {
+    left: 0;
+    transform: translateX(0);
+  }
+  
+  .blog-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .blog-container.sidebar-open::before {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 /* 作者信息区域 */
@@ -58,7 +98,8 @@
 .author-links {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .author-link {
@@ -75,6 +116,34 @@
   background: #667eea;
   color: white;
   transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .author-section {
+    padding: 20px 15px;
+  }
+  
+  .author-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .author-name {
+    font-size: 1.1em;
+  }
+  
+  .author-bio {
+    font-size: 0.8em;
+  }
+  
+  .author-links {
+    gap: 6px;
+  }
+  
+  .author-link {
+    font-size: 0.75em;
+    padding: 4px 8px;
+  }
 }
 
 /* 导航菜单 */
@@ -147,6 +216,25 @@
   margin-bottom: 5px;
 }
 
+@media (max-width: 768px) {
+  .navigation {
+    padding: 15px;
+  }
+  
+  .nav-item {
+    padding: 12px 15px;
+    margin: 3px 5px;
+  }
+  
+  .article-title {
+    font-size: 0.9em;
+  }
+  
+  .article-date {
+    font-size: 0.75em;
+  }
+}
+
 /* 主内容区域 */
 .main-content {
   flex: 1;
@@ -157,6 +245,15 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   height: calc(100vh - 40px);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin: 10px;
+    height: calc(100vh - 20px);
+    border-radius: 10px;
+  }
 }
 
 /* 加载状态 */
@@ -191,9 +288,37 @@
   color: #666;
 }
 
+.welcome-content {
+  margin-top: 20px;
+}
+
 .welcome h1 {
   color: #2c3e50;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    padding: 40px 20px;
+    text-align: left;
+  }
+  
+  .welcome .mobile-menu-btn.inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-content {
+    text-align: center;
+    margin-top: 0;
+  }
+  
+  .welcome h1 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
 }
 
 /* 文章内容 */
@@ -212,10 +337,35 @@
 }
 
 .article-header h1 {
-  margin: 0 0 15px;
+  margin: 10px 0 15px;
   color: #2c3e50;
   font-size: 2.2em;
   font-weight: 700;
+  line-height: 1.3;
+}
+
+/* 内联菜单按钮 */
+.mobile-menu-btn.inline {
+  display: none;
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  margin-bottom: 15px;
+  align-self: flex-start;
+}
+
+.mobile-menu-btn.inline:hover {
+  background: rgba(102, 126, 234, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .article-meta {
@@ -224,11 +374,13 @@
   gap: 20px;
   color: #666;
   font-size: 0.9em;
+  flex-wrap: wrap;
 }
 
 .article-tags {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .tag {
@@ -237,6 +389,41 @@
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.8em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn.inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .article-header {
+    padding: 20px 20px 15px;
+  }
+  
+  .article-header h1 {
+    font-size: 1.6em;
+    margin: 10px 0 15px;
+  }
+  
+  .mobile-menu-btn.inline {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .article-meta {
+    gap: 10px;
+    font-size: 0.8em;
+  }
+  
+  .tag {
+    font-size: 0.7em;
+    padding: 3px 6px;
+  }
 }
 
 /* Markdown 内容样式 */
@@ -258,6 +445,7 @@
   margin-top: 30px;
   margin-bottom: 15px;
   font-weight: 600;
+  line-height: 1.3;
 }
 
 .markdown-content h1 {
@@ -286,6 +474,7 @@
   border-radius: 4px;
   font-family: 'Courier New', monospace;
   color: #e83e8c;
+  word-break: break-word;
 }
 
 .markdown-content pre {
@@ -301,6 +490,7 @@
   background: none;
   color: inherit;
   padding: 0;
+  word-break: normal;
 }
 
 .markdown-content blockquote {
@@ -326,10 +516,84 @@
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-bottom-color 0.3s ease;
+  word-break: break-word;
 }
 
 .markdown-content a:hover {
   border-bottom-color: #667eea;
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+.markdown-content th,
+.markdown-content td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.markdown-content th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+@media (max-width: 768px) {
+  .markdown-content {
+    padding: 20px;
+    font-size: 0.9em;
+  }
+  
+  .markdown-content h1 {
+    font-size: 1.6em;
+  }
+  
+  .markdown-content h2 {
+    font-size: 1.4em;
+  }
+  
+  .markdown-content h3 {
+    font-size: 1.2em;
+  }
+  
+  .markdown-content pre {
+    padding: 15px;
+    font-size: 0.8em;
+    overflow-x: auto;
+  }
+  
+  .markdown-content blockquote {
+    padding-left: 15px;
+    margin: 15px 0;
+  }
+  
+  .markdown-content ul,
+  .markdown-content ol {
+    padding-left: 20px;
+  }
+  
+  .markdown-content table {
+    font-size: 0.8em;
+  }
+  
+  .markdown-content th,
+  .markdown-content td {
+    padding: 8px 10px;
+  }
 }
 
 /* 导航区域增强样式 */
@@ -371,6 +635,21 @@
   transform: none;
 }
 
+@media (max-width: 768px) {
+  .nav-header {
+    padding: 0 15px;
+  }
+  
+  .nav-header h4 {
+    font-size: 1em;
+  }
+  
+  .refresh-btn {
+    padding: 5px 10px;
+    font-size: 0.7em;
+  }
+}
+
 /* 错误消息样式 */
 .error-message {
   padding: 15px 20px;
@@ -381,6 +660,14 @@
   color: #d63031;
   font-size: 0.9em;
   line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .error-message {
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    font-size: 0.8em;
+  }
 }
 
 /* 加载文章列表样式 */
@@ -405,6 +692,12 @@
   margin: 0 auto;
 }
 
+@media (max-width: 768px) {
+  .loading-articles {
+    padding: 20px 15px;
+  }
+}
+
 /* 文章标签预览样式 */
 .article-tags-preview {
   margin-top: 8px;
@@ -420,6 +713,7 @@
   border-radius: 8px;
   font-size: 0.7em;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 /* 加载作者信息样式 */
@@ -444,30 +738,61 @@
   margin: 0 auto;
 }
 
-/* 响应式设计增强 */
 @media (max-width: 768px) {
-  .nav-header {
-    padding: 0 15px;
-  }
-  
-  .refresh-btn {
-    padding: 5px 10px;
-    font-size: 0.7em;
-  }
-  
-  .error-message {
-    padding: 12px 15px;
-    margin-bottom: 12px;
-    font-size: 0.8em;
-  }
-  
-  .loading-articles {
+  .loading-author {
     padding: 20px 15px;
   }
   
-  .nav-item {
-    padding: 12px 15px;
+  .tag-small {
+    font-size: 0.65em;
+  }
+}
+
+/* 响应式设计增强 */
+@media (max-width: 480px) {
+  .main-content {
+    margin: 5px;
     border-radius: 8px;
-    margin: 3px 6px;
+    height: calc(100vh - 10px);
+  }
+  
+  .article-header {
+    padding: 15px;
+  }
+  
+  .article-header h1 {
+    font-size: 1.4em;
+    margin: 8px 0 12px;
+  }
+  
+  .mobile-menu-btn.inline {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .markdown-content {
+    padding: 15px;
+  }
+  
+  .markdown-content h1 {
+    font-size: 1.4em;
+  }
+  
+  .markdown-content h2 {
+    font-size: 1.2em;
+  }
+  
+  .markdown-content h3 {
+    font-size: 1.1em;
+  }
+  
+  .welcome {
+    padding: 20px 15px;
+  }
+  
+  .welcome .mobile-menu-btn.inline {
+    margin-bottom: 15px;
   }
 }

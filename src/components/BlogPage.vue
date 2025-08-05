@@ -1,8 +1,8 @@
 /* eslint-disable vue/multi-word-component-names */
 <template>
-  <div class="blog-container">
+  <div class="blog-container" :class="{ 'sidebar-open': isSidebarOpen }">
     <!-- 侧边栏 -->
-    <aside class="sidebar">
+    <aside class="sidebar" :class="{ active: isSidebarOpen }" @click="handleSidebarClick">
       <!-- 作者信息区域 -->
       <div class="author-section">
         <div v-if="loadingAuthorInfo" class="loading-author">
@@ -68,6 +68,9 @@
       
       <div v-else-if="selectedArticle" class="article-content">
         <header class="article-header">
+          <button class="mobile-menu-btn inline" @click="toggleSidebar">
+            {{ isSidebarOpen ? '✕' : '☰' }}
+          </button>
           <h1>{{ selectedArticle.title }}</h1>
           <div class="article-meta">
             <span class="article-date">{{ formatDate(selectedArticle.date) }}</span>
@@ -80,8 +83,13 @@
       </div>
       
       <div v-else class="welcome">
-        <h1>欢迎来到我的博客</h1>
-        <p>请从左侧选择一篇文章开始阅读</p>
+        <button class="mobile-menu-btn inline" @click="toggleSidebar">
+          {{ isSidebarOpen ? '✕' : '☰' }}
+        </button>
+        <div class="welcome-content">
+          <h1>欢迎来到我的博客</h1>
+          <p>请从左侧选择一篇文章开始阅读</p>
+        </div>
       </div>
     </main>
   </div>
@@ -102,6 +110,7 @@ export default {
       renderedContent: '',
       articles: [],
       errorMessage: '',
+      isSidebarOpen: false,
       
       // GitHub仓库配置
       githubConfig: {
@@ -116,6 +125,17 @@ export default {
     };
   },
   methods: {
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
+    },
+    
+    handleSidebarClick(event) {
+      // 在移动端点击导航项后关闭侧边栏
+      if (window.innerWidth <= 768 && event.target.closest('.nav-item')) {
+        this.isSidebarOpen = false;
+      }
+    },
+    
     async loadAuthorInfoFromGitHub() {
       this.loadingAuthorInfo = true;
       
@@ -260,6 +280,11 @@ export default {
       this.selectedArticle = article;
       this.loading = true;
       
+      // 在移动端选择文章后关闭侧边栏
+      if (window.innerWidth <= 768) {
+        this.isSidebarOpen = false;
+      }
+      
       try {
         // 从 GitHub 获取 Markdown 内容
         const response = await axios.get(article.githubUrl);
@@ -331,6 +356,45 @@ function example() {
     // 启动时从GitHub加载作者信息和文章
     this.loadAuthorInfoFromGitHub();
     this.loadArticlesFromGitHub();
+    
+    // 监听窗口大小变化，在桌面端自动关闭侧边栏
+    this.handleResize = () => {
+      if (window.innerWidth > 768 && this.isSidebarOpen) {
+        this.isSidebarOpen = false;
+      }
+    };
+    
+    window.addEventListener('resize', this.handleResize);
+    
+    // 点击遮罩层关闭侧边栏
+    this.handleOverlayClick = (event) => {
+      if (this.isSidebarOpen && !event.target.closest('.sidebar') && !event.target.closest('.mobile-menu-btn')) {
+        this.isSidebarOpen = false;
+      }
+    };
+    
+    document.addEventListener('click', this.handleOverlayClick);
+    
+    // ESC键关闭侧边栏
+    this.handleKeydown = (event) => {
+      if (event.key === 'Escape' && this.isSidebarOpen) {
+        this.isSidebarOpen = false;
+      }
+    };
+    
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  
+  beforeUnmount() {
+    if (this.handleResize) {
+      window.removeEventListener('resize', this.handleResize);
+    }
+    if (this.handleOverlayClick) {
+      document.removeEventListener('click', this.handleOverlayClick);
+    }
+    if (this.handleKeydown) {
+      document.removeEventListener('keydown', this.handleKeydown);
+    }
   }
 };
 </script>
